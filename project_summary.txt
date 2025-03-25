@@ -1,0 +1,668 @@
+
+
+### FILE: .gitignore ###
+__pycache__/
+*.pyc
+.env
+.venv/
+instance/
+.env.*
+*.sqlite3
+
+
+############################################################
+
+
+### FILE: app.py ###
+import os
+from flask import Flask, render_template
+
+app = Flask(__name__)
+
+@app.route("/")
+def home():
+    return render_template("index.html")
+
+@app.route("/about")
+def about():
+    return render_template("about.html")
+
+@app.route("/resume")
+def resume():
+    return render_template("resume.html")
+
+@app.route("/contact")
+def contact():
+    return render_template("contact.html")
+
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 5000))
+    app.run(debug=False, host='0.0.0.0', port=port)
+
+
+############################################################
+
+
+### FILE: export_project.py ###
+import os
+
+# Define file extensions you want to include
+valid_extensions = ['.py', '.html', '.css', '.js', '.txt', '.md', '', '.json']
+
+# Define the output file
+output_file = "project_summary.txt"
+
+# Walk through all directories and files
+with open(output_file, "w", encoding='utf-8') as out:
+    for root, dirs, files in os.walk("."):
+        for file in files:
+            ext = os.path.splitext(file)[1]
+            if ext in valid_extensions and ".venv" not in root and "__pycache__" not in root and ".idea" not in root:
+                full_path = os.path.join(root, file)
+                try:
+                    with open(full_path, "r", encoding='utf-8') as f:
+                        rel_path = os.path.relpath(full_path, ".")
+                        out.write(f"\n\n### FILE: {rel_path} ###\n")
+                        out.write(f.read())
+                        out.write("\n\n" + "#" * 60 + "\n")
+                except Exception as e:
+                    print(f"Error reading {full_path}: {e}")
+
+print(f"\n✅ Project exported to: {output_file}")
+
+
+############################################################
+
+
+### FILE: Procfile ###
+web: gunicorn app:app
+
+
+############################################################
+
+
+### FILE: project_summary.txt ###
+
+
+############################################################
+
+
+### FILE: requirements.txt ###
+Flask>=2.2.2
+Werkzeug>=2.2.2
+gunicorn==20.1.0
+
+
+############################################################
+
+
+### FILE: .git\COMMIT_EDITMSG ###
+Initial Commit
+
+
+############################################################
+
+
+### FILE: .git\config ###
+[core]
+	repositoryformatversion = 0
+	filemode = false
+	bare = false
+	logallrefupdates = true
+	symlinks = false
+	ignorecase = true
+[remote "origin"]
+	url = https://github.com/shariqmasood/portfolio-deploy.git
+	fetch = +refs/heads/*:refs/remotes/origin/*
+[branch "main"]
+	remote = origin
+	merge = refs/heads/main
+
+
+############################################################
+
+
+### FILE: .git\description ###
+Unnamed repository; edit this file 'description' to name the repository.
+
+
+############################################################
+
+
+### FILE: .git\HEAD ###
+ref: refs/heads/main
+
+
+############################################################
+
+
+### FILE: .git\index ###
+
+
+### FILE: .git\info\exclude ###
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+
+
+############################################################
+
+
+### FILE: .git\logs\HEAD ###
+0000000000000000000000000000000000000000 a241ad446e990b7ad5a54970f24b91bb5bd927e4 Sharriq <shariqmasood@gmail.com> 1742880688 +0500	commit (initial): Initial Commit
+a241ad446e990b7ad5a54970f24b91bb5bd927e4 0000000000000000000000000000000000000000 Sharriq <shariqmasood@gmail.com> 1742881416 +0500	Branch: renamed refs/heads/master to refs/heads/main
+0000000000000000000000000000000000000000 a241ad446e990b7ad5a54970f24b91bb5bd927e4 Sharriq <shariqmasood@gmail.com> 1742881416 +0500	Branch: renamed refs/heads/master to refs/heads/main
+a241ad446e990b7ad5a54970f24b91bb5bd927e4 9dbe17def2fcf828c432f5608e90755b3b481fad Sharriq <shariqmasood@gmail.com> 1742881678 +0500	commit: Add complete Flask portfolio site
+9dbe17def2fcf828c432f5608e90755b3b481fad 407a9e7093a2a4b3927634204c6c1b8b72c46224 Sharriq <shariqmasood@gmail.com> 1742882271 +0500	commit: Trigger push to update GitHub view
+407a9e7093a2a4b3927634204c6c1b8b72c46224 0000000000000000000000000000000000000000 Sharriq <shariqmasood@gmail.com> 1742883044 +0500	Branch: renamed refs/heads/main to refs/heads/main
+407a9e7093a2a4b3927634204c6c1b8b72c46224 407a9e7093a2a4b3927634204c6c1b8b72c46224 Sharriq <shariqmasood@gmail.com> 1742883044 +0500	Branch: renamed refs/heads/main to refs/heads/main
+407a9e7093a2a4b3927634204c6c1b8b72c46224 ed683037bd673b61673aa4052b0faecef984613d Sharriq <shariqmasood@gmail.com> 1742888584 +0500	commit: Initial Commit
+
+
+############################################################
+
+
+### FILE: .git\logs\refs\heads\main ###
+0000000000000000000000000000000000000000 a241ad446e990b7ad5a54970f24b91bb5bd927e4 Sharriq <shariqmasood@gmail.com> 1742880688 +0500	commit (initial): Initial Commit
+a241ad446e990b7ad5a54970f24b91bb5bd927e4 a241ad446e990b7ad5a54970f24b91bb5bd927e4 Sharriq <shariqmasood@gmail.com> 1742881416 +0500	Branch: renamed refs/heads/master to refs/heads/main
+a241ad446e990b7ad5a54970f24b91bb5bd927e4 9dbe17def2fcf828c432f5608e90755b3b481fad Sharriq <shariqmasood@gmail.com> 1742881678 +0500	commit: Add complete Flask portfolio site
+9dbe17def2fcf828c432f5608e90755b3b481fad 407a9e7093a2a4b3927634204c6c1b8b72c46224 Sharriq <shariqmasood@gmail.com> 1742882271 +0500	commit: Trigger push to update GitHub view
+407a9e7093a2a4b3927634204c6c1b8b72c46224 407a9e7093a2a4b3927634204c6c1b8b72c46224 Sharriq <shariqmasood@gmail.com> 1742883044 +0500	Branch: renamed refs/heads/main to refs/heads/main
+407a9e7093a2a4b3927634204c6c1b8b72c46224 ed683037bd673b61673aa4052b0faecef984613d Sharriq <shariqmasood@gmail.com> 1742888584 +0500	commit: Initial Commit
+
+
+############################################################
+
+
+### FILE: .git\logs\refs\remotes\origin\main ###
+0000000000000000000000000000000000000000 407a9e7093a2a4b3927634204c6c1b8b72c46224 Sharriq <shariqmasood@gmail.com> 1742883057 +0500	update by push
+407a9e7093a2a4b3927634204c6c1b8b72c46224 ed683037bd673b61673aa4052b0faecef984613d Sharriq <shariqmasood@gmail.com> 1742888612 +0500	update by push
+
+
+############################################################
+
+
+### FILE: .git\objects\01\3aafcd78ca600a554ede9ee89d36ad2a6d88d4 ###
+
+
+### FILE: .git\objects\04\b81cf78e365659b6ffe148e6ca9e783a49ab3d ###
+
+
+### FILE: .git\objects\08\fb2fa7ed9bcb5a576700c8f6957fb930b5483a ###
+
+
+### FILE: .git\objects\10\5ce2da2d6447d11dfe32bfb846c3d5b199fc99 ###
+
+
+### FILE: .git\objects\15\17915fbd4a761a1dc726927b80a7b841cf6aff ###
+
+
+### FILE: .git\objects\1c\8f27d61d1a1de3a018ff4454319ff39562ac8a ###
+
+
+### FILE: .git\objects\26\d33521af10bcc7fd8cea344038eaaeb78d0ef5 ###
+
+
+### FILE: .git\objects\2c\e5e4488f3cc74810a3f2f595b757234a4b6002 ###
+
+
+### FILE: .git\objects\31\d16afee48bf996859b8c1059d8ede336b345fc ###
+
+
+### FILE: .git\objects\35\878125cf2a4df11decb0f8f5ecc5037f59a446 ###
+
+
+### FILE: .git\objects\37\462d7edafbed530b15e0e2f263dabbceeeb7f8 ###
+
+
+### FILE: .git\objects\3d\1153de01183b9dc3f67e31ef7bb201bed7fa40 ###
+
+
+### FILE: .git\objects\40\7a9e7093a2a4b3927634204c6c1b8b72c46224 ###
+
+
+### FILE: .git\objects\41\05e28e7b90e9d22ba5fcd365f30e8832837b09 ###
+
+
+### FILE: .git\objects\50\23a63b978aa072ac2d2297d0e52ad0ca27be73 ###
+
+
+### FILE: .git\objects\56\09c83abbc168b2aa0da4689157ae2e4fd32acb ###
+
+
+### FILE: .git\objects\57\46c3d4d748f9fa22d517e41db49369851c3fae ###
+
+
+### FILE: .git\objects\79\2f7807ccdb1f764f6c537ff251f7e56d4ba7dc ###
+
+
+### FILE: .git\objects\83\511c5fb82d077dc523f88686f71bc7bdcacf79 ###
+
+
+### FILE: .git\objects\83\aae88e998e67f9b8edaf07352018a6db2d7609 ###
+
+
+### FILE: .git\objects\8b\4f5017f0540310b55e0dac8a1cd6170cdedbb9 ###
+
+
+### FILE: .git\objects\94\a25f7f4cb416c083d265558da75d457237d671 ###
+
+
+### FILE: .git\objects\97\824ec9b0149e48c91dce4fee530335b327c686 ###
+
+
+### FILE: .git\objects\99\d56eac51d422ae156f3259620d4a427b27a3d1 ###
+
+
+### FILE: .git\objects\9d\be17def2fcf828c432f5608e90755b3b481fad ###
+
+
+### FILE: .git\objects\a2\41ad446e990b7ad5a54970f24b91bb5bd927e4 ###
+
+
+### FILE: .git\objects\c3\61eccdb3a5501f9904a919f16a783d111f3503 ###
+
+
+### FILE: .git\objects\c7\4c12bc4f297b21e0cf56715d7bc4cd862b72aa ###
+
+
+### FILE: .git\objects\c8\9990d00696fd302d44bd5845e259be7e17a686 ###
+
+
+### FILE: .git\objects\ca\6d701aec30d177210eb64466f6159ac6369e81 ###
+
+
+### FILE: .git\objects\ca\6e941cbc79a8519bfef7475ea15c12cb0b5550 ###
+
+
+### FILE: .git\objects\d5\3db990b97b43565334ad2ec7c95ff21d32683e ###
+
+
+### FILE: .git\objects\dd\ed8a49ec635c31175cd0490c63eb48be7d78aa ###
+
+
+### FILE: .git\objects\e6\9de29bb2d1d6434b8b29ae775ad8c2e48c5391 ###
+
+
+### FILE: .git\objects\ec\d47f0584292be673f5022b0b3bfcd37e43ae22 ###
+
+
+### FILE: .git\objects\ed\683037bd673b61673aa4052b0faecef984613d ###
+
+
+### FILE: .git\objects\ef\8f323e876dd5d9cf2bd7e2738f55be83ea023c ###
+
+
+### FILE: .git\refs\heads\main ###
+ed683037bd673b61673aa4052b0faecef984613d
+
+
+############################################################
+
+
+### FILE: .git\refs\remotes\origin\main ###
+ed683037bd673b61673aa4052b0faecef984613d
+
+
+############################################################
+
+
+### FILE: static\css\style.css ###
+body {
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+}
+
+h1, h2, h3 {
+  color: #333;
+}
+
+/* Customize navbar, footer, or any sections as needed */
+
+
+############################################################
+
+
+### FILE: templates\about.html ###
+{% extends "base.html" %}
+{% block content %}
+<h2>About Me</h2>
+<p>
+    With a distinguished career spanning over 25 years in the aerospace and defense industry, I bring a wealth of expertise in avionics systems design, integration, software development, and project leadership. My professional journey includes pivotal roles such as Project Director, Chief Engineer, and Program Manager, where I’ve consistently driven innovation and ensured mission-critical success under demanding conditions.
+</p>
+<p>
+    Over the years, I have led and contributed to the development of complex software solutions—ranging from avionics integration simulators to mission system software and flight-critical test platforms. My hands-on experience in embedded systems, software lifecycle management, and collaboration with cross-functional development teams has been instrumental in transforming user requirements into reliable, efficient, and scalable solutions.
+</p>
+<p>
+    I am deeply committed to engineering excellence and thrive in dynamic environments that challenge both technical rigor and strategic thinking. My work reflects a strong dedication to quality, continuous improvement, and the development of world-class aviation and software capabilities. Whether leading multidisciplinary teams or collaborating with global stakeholders, I approach every project with integrity, precision, and a passion for delivering impactful solutions.
+</p>
+<div style="margin-bottom: 200px;"></div>
+<!-- You can add more sections or images as needed -->
+{% endblock %}
+
+
+############################################################
+
+
+### FILE: templates\base.html ###
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ title if title else "Portfolio" }}</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top shadow-sm">
+    <div class="container">
+      <a class="navbar-brand fw-bold" href="/">My Portfolio</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+         aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+         <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+         <ul class="navbar-nav ms-auto">
+            <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+            <li class="nav-item"><a class="nav-link" href="/about">About</a></li>
+            <li class="nav-item"><a class="nav-link" href="/resume">Resume</a></li>
+            <li class="nav-item"><a class="nav-link" href="/contact">Contact</a></li>
+         </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="container py-4 px-3">
+    {% block content %}
+    {% endblock %}
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-light py-4 mt-5 border-top">
+    <div class="container text-center">
+      <p class="mb-1">&copy; {{ year or "2025" }} Shariq Masood. All rights reserved.</p>
+      <p class="mb-0 small">
+        <a href="mailto:shariqmasood@gmail.com">shariqmasood@gmail.com</a> |
+        <a href="https://linkedin.com/in/shariq-masood-8b70a4293" target="_blank">LinkedIn</a>
+      </p>
+    </div>
+  </footer>
+
+  <!-- Bootstrap JS Bundle -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+
+
+############################################################
+
+
+### FILE: templates\contact.html ###
+{% extends "base.html" %}
+{% block content %}
+<h2>Contact Me</h2>
+<p>If you'd like to connect, feel free to drop me a message!</p>
+<form action="mailto:shariqmasood@gmail.com" method="post" enctype="text/plain">
+  <div class="mb-3">
+    <label for="name" class="form-label">Name</label>
+    <input type="text" class="form-control" id="name" placeholder="Your Name">
+  </div>
+  <div class="mb-3">
+    <label for="email" class="form-label">Email</label>
+    <input type="email" class="form-control" id="email" placeholder="Your Email">
+  </div>
+  <div class="mb-3">
+    <label for="message" class="form-label">Message</label>
+    <textarea class="form-control" id="message" rows="4" placeholder="Your Message"></textarea>
+  </div>
+  <button type="submit" class="btn btn-primary">Send</button>
+</form>
+{% endblock %}
+
+
+############################################################
+
+
+### FILE: templates\index.html ###
+{% extends "base.html" %}
+{% block content %}
+<div class="row align-items-center">
+  <div class="col-md-6">
+    <h1 class="display-4">Hi, I'm Shariq Masood</h1>
+    <p class="lead">A seasoned avionics professional & software developer with over 25 years of experience.</p>
+    <a href="/resume" class="btn btn-primary btn-lg">View My Resume</a>
+  </div>
+  <div class="col-md-6 text-center">
+    <img src="{{ url_for('static', filename='img/profile.jpg') }}" alt="Profile Picture" class="img-fluid rounded-circle" style="max-width: 300px;">
+  </div>
+</div>
+{% endblock %}
+
+
+############################################################
+
+
+### FILE: templates\resume.html ###
+{% extends "base.html" %}
+{% block content %}
+
+<!-- FAB Toggle for Mobile Nav -->
+<button class="btn btn-primary position-fixed bottom-0 start-0 m-3 d-md-none z-3" id="toggleNav">
+  <i class="fas fa-bars"></i>
+</button>
+
+<!-- Section Navigation (Floating Vertical Menu Right) -->
+<div class="section-nav position-fixed top-50 end-0 translate-middle-y z-3 opacity-100 transition-opacity" id="floatingNav" style="width: 180px; transition: opacity 0.5s ease-in-out;">
+  <div class="d-flex flex-column align-items-end">
+    <a href="#experience" class="btn btn-outline-primary m-1 nav-link-scroll w-100 text-start"><i class="fas fa-briefcase me-2"></i>Experience</a>
+    <a href="#education" class="btn btn-outline-primary m-1 nav-link-scroll w-100 text-start"><i class="fas fa-graduation-cap me-2"></i>Education</a>
+    <a href="#skills" class="btn btn-outline-primary m-1 nav-link-scroll w-100 text-start"><i class="fas fa-tools me-2"></i>Skills</a>
+    <a href="#awards" class="btn btn-outline-primary m-1 nav-link-scroll w-100 text-start"><i class="fas fa-trophy me-2"></i>Awards</a>
+    <a href="#activities" class="btn btn-outline-primary m-1 nav-link-scroll w-100 text-start"><i class="fas fa-users me-2"></i>Activities</a>
+    <a href="#sports" class="btn btn-outline-primary m-1 nav-link-scroll w-100 text-start"><i class="fas fa-table-tennis me-2"></i>Sports</a>
+  </div>
+</div>
+
+<!-- Anchor offset fix -->
+<style>
+  html {
+    scroll-behavior: smooth;
+  }
+  h2[id]::before {
+    content: "";
+    display: block;
+    height: 120px;
+    margin-top: -120px;
+    visibility: hidden;
+  }
+  .section-nav .active {
+    background-color: #0d6efd !important;
+    color: white !important;
+  }
+  .fade-out {
+    opacity: 0 !important;
+    pointer-events: none;
+  }
+  .fade-in {
+    opacity: 1 !important;
+    pointer-events: auto;
+  }
+</style>
+
+<script>
+  // Highlight active section in floating nav and auto-hide on scroll with animation
+  document.addEventListener("DOMContentLoaded", function () {
+    const navLinks = document.querySelectorAll('.nav-link-scroll');
+    const sections = [...document.querySelectorAll('h2[id]')];
+    const floatingNav = document.getElementById('floatingNav');
+    const toggleNav = document.getElementById('toggleNav');
+
+    let lastScrollTop = 0;
+    let ticking = false;
+
+    function onScroll() {
+      const scrollPosition = window.scrollY + 140;
+      let current = sections.find(sec => sec.offsetTop <= scrollPosition);
+      navLinks.forEach(link => link.classList.remove('active'));
+      if (current) {
+        const activeLink = document.querySelector(`.nav-link-scroll[href="#${current.id}"]`);
+        if (activeLink) activeLink.classList.add('active');
+      }
+
+      const currentScrollTop = window.scrollY;
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          if (currentScrollTop > lastScrollTop && window.innerWidth >= 768) {
+            floatingNav.classList.add('fade-out');
+            floatingNav.classList.remove('fade-in');
+          } else {
+            floatingNav.classList.add('fade-in');
+            floatingNav.classList.remove('fade-out');
+          }
+          lastScrollTop = currentScrollTop <= 0 ? 0 : currentScrollTop;
+          ticking = false;
+        });
+        ticking = true;
+      }
+    }
+
+    document.addEventListener("scroll", onScroll);
+    onScroll();
+
+    // Toggle nav visibility on mobile
+    toggleNav.addEventListener("click", function () {
+      floatingNav.classList.toggle("d-none");
+    });
+
+    // Show nav by default on desktop
+    if (window.innerWidth >= 768) {
+      floatingNav.classList.remove("d-none");
+    }
+  });
+</script>
+
+<!-- ... existing content remains unchanged ... -->
+
+<h2 id="experience" class="text-center mb-5">Professional Experience</h2>
+<div class="timeline">
+
+  {% for role in [
+    ["Project Director, Kamra Technology Square (KTS), NASTP (Nov 2023 – Jul 2024)", ["Launched and operationalized aerospace hub at Kamra.", "Achieved 80% occupancy through strategic planning and teamwork."], "briefcase"],
+    ["Deputy Managing Director, APF, PAC Kamra (Jun 2023 – Nov 2023)", ["Led avionics design and MRO departments.", "Oversaw 18+ systems production, MRO of 20+ systems.", "Enhanced platform capability via system integration."], "building"],
+    ["Chief Engineer Design & Dev Group, APF, PAC Kamra (Aug 2020 – May 2023)", ["Led AS-9100D R&D team for certified avionics development.", "Delivered AAP, UFCP, DACS, MFCD, DTU.", "Initiated TACAN Audio Control and MAWS projects."], "wrench"],
+    ["Chief Engineer Production Support Group, APF (Aug 2019 – Aug 2020)", ["Managed coordination with OEMs for avionics production.", "Evaluated technical proposals for MALE UAV project.", "Supervised production of testers and ground support equipment."], "cogs"],
+    ["Director Technical Services, APF (Jan 2018 – Jul 2019)", ["Managed factory-wide operations and strategic reporting.", "Handled VVIP visits and authored industrial strategy paper."], "user-tie"],
+    ["Deputy Chief Engineer Rig Dev, Avionics Production Factory (Mar 2015 – Dec 2017)", ["Led rig upgrades, developed simulators for OFP.", "Collaborated with local industry for hardware stimulator integration.", "Managed serial production of testers for FCS & engine systems."], "microchip"],
+    ["Program Manager Software Dev, Avionics Production Factory (Jan 2010 – Mar 2015)", ["Upgraded avionics simulation software.", "Developed datalink radio stimulator for lab testing.", "Replaced OEM testers with cost-effective in-house solutions."], "code"],
+    ["Member Avionics Dev, CADI, China (Dec 2008 – Jan 2010)", ["Validated user requirements and POP implementation.", "Managed configuration issues between dev teams.", "Liaised with vendors and reviewed technical documents."], "globe"],
+    ["Program Manager Software Dev, APF, PAC Kamra (Nov 2006 – Dec 2008)", ["Accepted and upgraded avionics integration rig.", "Developed avionics software simulators for mission systems."], "laptop-code"],
+    ["Avionics Integration Tech Acquisition, CADI, China (Mar 2004 – Nov 2006)", ["Trained in avionics system design, integration, and test.", "Worked on rig development, onboard integration and V&V."], "school"],
+    ["Instructor, School of Electronics, Korangi (Mar 2003 – Mar 2004)", ["Led training for Radio/Radar technicians.", "Delivered lectures, assessments, and reviewed curriculum."], "chalkboard-teacher"],
+    ["Officer Incharge Automation System, Air Defence HQ (Aug 1999 – Mar 2003)", ["Maintained Hughes Automation System.", "Handled OJT, logistics, and quality assurance."], "satellite"],
+    ["Officer Incharge Electronics Warfare System, PAF (May 1996 – Aug 1999)", ["Oversaw maintenance and upgrades of EW systems.", "Trained supervisors, forecasted logistics, and ensured QA."], "shield-alt"]
+  ] %}
+  <div class="timeline-item">
+    <div class="timeline-marker"><i class="fas fa-{{ role[2] }} text-white"></i></div>
+    <div class="timeline-content">
+      <h5>{{ role[0] }}</h5>
+      <ul>
+        {% for bullet in role[1] %}
+        <li>{{ bullet }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+<h2 id="education" class="mt-5">Education</h2>
+<ul>
+  <li>MS Computer Engineering, UET Taxila (CGPA 3.75/4.00)</li>
+  <li>MS War Studies, NDU, Islamabad</li>
+  <li>BE Avionics, College of Aeronautical Engineering, NUST (CGPA 3.08/4.00)</li>
+</ul>
+
+<h2 id="skills" class="mt-4">Skills & Certifications</h2>
+<ul>
+  <li>Avionics System Design & Development</li>
+  <li>Systems Integration & Testing</li>
+  <li>AS-9100D / DO-178B Understanding</li>
+  <li>C/C++ / Java / Python</li>
+</ul>
+
+<h2 id="awards" class="mt-4">Professional Awards</h2>
+<ul>
+  <li>Chief of Air Staff Commendation Certificate (Mar, 2013)</li>
+  <li>Chief of Air Staff Commendation Certificate (Aug, 2014)</li>
+  <li>Professional Excellence Badge (Mar, 2016)</li>
+  <li>Tamgha-e-Imtiaz Military (Mar, 2018)</li>
+</ul>
+
+<h2 id="activities" class="mt-4">Extra Curricular Activities</h2>
+<ul>
+  <li>President Mess Committee Officers Club, Pakistan Aeronautical Complex (Mar, 2021 – Aug, 2023)</li>
+</ul>
+
+<h2 id="sports" class="mt-4">Sports</h2>
+<ul>
+  <li>Tennis Team Captain, Pakistan Aeronautical Complex, Kamra (Aug, 2020 – Sep, 2023)</li>
+  <li>Member of Squash Team, PAF Base Sargodha (May, 1997 – Aug, 1999)</li>
+  <li>Table Tennis Team Captain, St Judes High School (Sep, 1983 – Nov, 1985)</li>
+</ul>
+
+<!-- Font Awesome for timeline icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+<style>
+  .timeline {
+    position: relative;
+    padding: 2rem 0;
+    margin-left: 1rem;
+    border-left: 4px solid #0d6efd;
+  }
+  .timeline-item {
+    position: relative;
+    margin-bottom: 2rem;
+    animation: fadeInUp 0.6s ease-in-out both;
+  }
+  .timeline-marker {
+    position: absolute;
+    left: -1.15rem;
+    top: 0;
+    width: 2rem;
+    height: 2rem;
+    background-color: #0d6efd;
+    border-radius: 50%;
+    border: 2px solid white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+  }
+  .timeline-content {
+    margin-left: 2rem;
+  }
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>
+
+{% endblock %}
+
+
+############################################################

@@ -7,7 +7,7 @@
 </button>
 
 <!-- Section Navigation (Floating Vertical Menu Right) -->
-<div class="section-nav position-fixed top-50 end-0 translate-middle-y z-3 opacity-100 transition-opacity" id="floatingNav" style="width: 180px; transition: opacity 0.5s ease-in-out;">
+<div class="section-nav position-fixed top-50 end-0 translate-middle-y z-3 opacity-100 transition-opacity d-none d-md-block" id="floatingNav" style="width: 180px; transition: opacity 0.5s ease-in-out;">
   <div class="d-flex flex-column align-items-end">
     <a href="#experience" class="btn btn-outline-primary m-1 nav-link-scroll w-100 text-start"><i class="fas fa-briefcase me-2"></i>Experience</a>
     <a href="#education" class="btn btn-outline-primary m-1 nav-link-scroll w-100 text-start"><i class="fas fa-graduation-cap me-2"></i>Education</a>
@@ -45,7 +45,6 @@
 </style>
 
 <script>
-  // Highlight active section in floating nav and auto-hide on scroll with animation
   document.addEventListener("DOMContentLoaded", function () {
     const navLinks = document.querySelectorAll('.nav-link-scroll');
     const sections = [...document.querySelectorAll('h2[id]')];
@@ -88,13 +87,11 @@
     toggleNav.addEventListener("click", function () {
       floatingNav.classList.toggle("d-none");
     });
-
-    // Show nav by default on desktop
-    if (window.innerWidth >= 768) {
-      floatingNav.classList.remove("d-none");
-    }
   });
 </script>
+
+
+
 
 <!-- ... existing content remains unchanged ... -->
 
