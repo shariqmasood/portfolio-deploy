@@ -1,0 +1,159 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Professional Experience</h2>
+<div class="accordion" id="resumeAccordion">
+
+  <!-- Project Director, KTS -->
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="headingKTS">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseKTS" aria-expanded="false" aria-controls="collapseKTS">
+        Project Director, Kamra Technology Square (KTS), NASTP (Nov 2023 – Jul 2024)
+      </button>
+    </h2>
+    <div id="collapseKTS" class="accordion-collapse collapse" aria-labelledby="headingKTS" data-bs-parent="#resumeAccordion">
+      <div class="accordion-body">
+        <ul>
+          <li>Launched and operationalized aerospace hub at Kamra.</li>
+          <li>Achieved 80% occupancy through strategic planning and teamwork.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Deputy Managing Director -->
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="headingDMD">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDMD" aria-expanded="false" aria-controls="collapseDMD">
+        Deputy Managing Director, APF, PAC Kamra (Jun 2023 – Nov 2023)
+      </button>
+    </h2>
+    <div id="collapseDMD" class="accordion-collapse collapse" aria-labelledby="headingDMD" data-bs-parent="#resumeAccordion">
+      <div class="accordion-body">
+        <ul>
+          <li>Led avionics design and MRO departments.</li>
+          <li>Oversaw 18+ systems production, MRO of 20+ systems.</li>
+          <li>Enhanced platform capability via system integration.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Chief Engineer Design & Dev -->
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="headingCEDDG">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCEDDG" aria-expanded="false" aria-controls="collapseCEDDG">
+        Chief Engineer Design & Dev Group, APF, PAC Kamra (Aug 2020 – May 2023)
+      </button>
+    </h2>
+    <div id="collapseCEDDG" class="accordion-collapse collapse" aria-labelledby="headingCEDDG" data-bs-parent="#resumeAccordion">
+      <div class="accordion-body">
+        <ul>
+          <li>Led AS-9100D R&D team for certified avionics development.</li>
+          <li>Delivered AAP, UFCP, DACS, MFCD, DTU.</li>
+          <li>Initiated TACAN Audio Control and MAWS projects.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Chief Engineer Production Support -->
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="headingCEPSG">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCEPSG" aria-expanded="false" aria-controls="collapseCEPSG">
+        Chief Engineer Production Support Group, APF (Aug 2019 – Aug 2020)
+      </button>
+    </h2>
+    <div id="collapseCEPSG" class="accordion-collapse collapse" aria-labelledby="headingCEPSG" data-bs-parent="#resumeAccordion">
+      <div class="accordion-body">
+        <ul>
+          <li>Managed coordination with OEMs for avionics production.</li>
+          <li>Evaluated technical proposals for MALE UAV project.</li>
+          <li>Supervised production of testers and ground support equipment.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Director Technical Services -->
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="headingDTS">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDTS" aria-expanded="false" aria-controls="collapseDTS">
+        Director Technical Services, APF (Jan 2018 – Jul 2019)
+      </button>
+    </h2>
+    <div id="collapseDTS" class="accordion-collapse collapse" aria-labelledby="headingDTS" data-bs-parent="#resumeAccordion">
+      <div class="accordion-body">
+        <ul>
+          <li>Managed factory-wide operations and strategic reporting.</li>
+          <li>Handled VVIP visits and authored industrial strategy paper.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Roles 1996–2017 -->
+  {% for role in [
+    ["Deputy Chief Engineer Rig Dev, Avionics Production Factory (Mar 2015 – Dec 2017)", ["Led rig upgrades, developed simulators for OFP.", "Collaborated with local industry for hardware stimulator integration.", "Managed serial production of testers for FCS & engine systems."]],
+    ["Program Manager Software Dev, Avionics Production Factory (Jan 2010 – Mar 2015)", ["Upgraded avionics simulation software.", "Developed datalink radio stimulator for lab testing.", "Replaced OEM testers with cost-effective in-house solutions."]],
+    ["Member Avionics Dev, CADI, China (Dec 2008 – Jan 2010)", ["Validated user requirements and POP implementation.", "Managed configuration issues between dev teams.", "Liaised with vendors and reviewed technical documents."]],
+    ["Program Manager Software Dev, APF, PAC Kamra (Nov 2006 – Dec 2008)", ["Accepted and upgraded avionics integration rig.", "Developed avionics software simulators for mission systems."]],
+    ["Avionics Integration Tech Acquisition, CADI, China (Mar 2004 – Nov 2006)", ["Trained in avionics system design, integration, and test.", "Worked on rig development, onboard integration and V&V."]],
+    ["Instructor, School of Electronics, Korangi (Mar 2003 – Mar 2004)", ["Led training for Radio/Radar technicians.", "Delivered lectures, assessments, and reviewed curriculum."]],
+    ["Officer Incharge Automation System, Air Defence HQ (Aug 1999 – Mar 2003)", ["Maintained Hughes Automation System.", "Handled OJT, logistics, and quality assurance."]],
+    ["Officer Incharge Electronics Warfare System, PAF (May 1996 – Aug 1999)", ["Oversaw maintenance and upgrades of EW systems.", "Trained supervisors, forecasted logistics, and ensured QA."]]
+  ] %}
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="heading{{ loop.index }}">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ loop.index }}" aria-expanded="false" aria-controls="collapse{{ loop.index }}">
+        {{ role[0] }}
+      </button>
+    </h2>
+    <div id="collapse{{ loop.index }}" class="accordion-collapse collapse" aria-labelledby="heading{{ loop.index }}" data-bs-parent="#resumeAccordion">
+      <div class="accordion-body">
+        <ul>
+          {% for bullet in role[1] %}
+          <li>{{ bullet }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+
+</div>
+
+<h2 class="mt-4">Education</h2>
+<ul>
+  <li>MS Computer Engineering, UET Taxila (CGPA 3.75/4.00)</li>
+  <li>MS War Studies, NDU, Islamabad</li>
+  <li>BE Avionics, College of Aeronautical Engineering, NUST (CGPA 3.08/4.00)</li>
+</ul>
+
+<h2 class="mt-4">Skills & Certifications</h2>
+<ul>
+  <li>Avionics System Design & Development</li>
+  <li>Systems Integration & Testing</li>
+  <li>AS-9100D / DO-178B Understanding</li>
+  <li>C/C++ / Java / Python</li>
+</ul>
+<h2 class="mt-4">Professional Awards</h2>
+<ul>
+  <li>Chief of Air Staff Commendation Certificate (Mar, 2013)</li>
+  <li>Chief of Air Staff Commendation Certificate (Aug, 2014)</li>
+  <li>Professional Excellence Badge (Mar, 2016)</li>
+  <li>Tamgha-e-Imtiaz Military (Mar, 2018)</li>
+</ul>
+
+<h2 class="mt-4">Extra Curricular Activities</h2>
+<ul>
+  <li>President Mess Committee Officers Club, Pakistan Aeronautical Complex (Mar, 2021 – Aug, 2023)</li>
+</ul>
+
+<h2 class="mt-4">Sports</h2>
+<ul>
+  <li>Tennis Team Captain, Pakistan Aeronautical Complex, Kamra (Aug, 2020 – Sep, 2023)</li>
+  <li>Member of Squash Team, PAF Base Sargodha (May, 1997 – Aug, 1999)</li>
+  <li>Table Tennis Team Captain, St Judes High School (Sep, 1983 – Nov, 1985)</li>
+</ul>
+
+{% endblock %}
