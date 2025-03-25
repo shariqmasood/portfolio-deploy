@@ -1,142 +1,151 @@
 {% extends "base.html" %}
 {% block content %}
-<h2>Professional Experience</h2>
-<div class="accordion" id="resumeAccordion">
 
-  <!-- Project Director, KTS -->
-  <div class="accordion-item">
-    <h2 class="accordion-header" id="headingKTS">
-      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseKTS" aria-expanded="false" aria-controls="collapseKTS">
-        Project Director, Kamra Technology Square (KTS), NASTP (Nov 2023 – Jul 2024)
-      </button>
-    </h2>
-    <div id="collapseKTS" class="accordion-collapse collapse" aria-labelledby="headingKTS" data-bs-parent="#resumeAccordion">
-      <div class="accordion-body">
-        <ul>
-          <li>Launched and operationalized aerospace hub at Kamra.</li>
-          <li>Achieved 80% occupancy through strategic planning and teamwork.</li>
-        </ul>
-      </div>
-    </div>
+<!-- FAB Toggle for Mobile Nav -->
+<button class="btn btn-primary position-fixed bottom-0 start-0 m-3 d-md-none z-3" id="toggleNav">
+  <i class="fas fa-bars"></i>
+</button>
+
+<!-- Section Navigation (Floating Vertical Menu Right) -->
+<div class="section-nav position-fixed top-50 end-0 translate-middle-y z-3 opacity-100 transition-opacity" id="floatingNav" style="width: 180px; transition: opacity 0.5s ease-in-out;">
+  <div class="d-flex flex-column align-items-end">
+    <a href="#experience" class="btn btn-outline-primary m-1 nav-link-scroll w-100 text-start"><i class="fas fa-briefcase me-2"></i>Experience</a>
+    <a href="#education" class="btn btn-outline-primary m-1 nav-link-scroll w-100 text-start"><i class="fas fa-graduation-cap me-2"></i>Education</a>
+    <a href="#skills" class="btn btn-outline-primary m-1 nav-link-scroll w-100 text-start"><i class="fas fa-tools me-2"></i>Skills</a>
+    <a href="#awards" class="btn btn-outline-primary m-1 nav-link-scroll w-100 text-start"><i class="fas fa-trophy me-2"></i>Awards</a>
+    <a href="#activities" class="btn btn-outline-primary m-1 nav-link-scroll w-100 text-start"><i class="fas fa-users me-2"></i>Activities</a>
+    <a href="#sports" class="btn btn-outline-primary m-1 nav-link-scroll w-100 text-start"><i class="fas fa-table-tennis me-2"></i>Sports</a>
   </div>
+</div>
 
-  <!-- Deputy Managing Director -->
-  <div class="accordion-item">
-    <h2 class="accordion-header" id="headingDMD">
-      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDMD" aria-expanded="false" aria-controls="collapseDMD">
-        Deputy Managing Director, APF, PAC Kamra (Jun 2023 – Nov 2023)
-      </button>
-    </h2>
-    <div id="collapseDMD" class="accordion-collapse collapse" aria-labelledby="headingDMD" data-bs-parent="#resumeAccordion">
-      <div class="accordion-body">
-        <ul>
-          <li>Led avionics design and MRO departments.</li>
-          <li>Oversaw 18+ systems production, MRO of 20+ systems.</li>
-          <li>Enhanced platform capability via system integration.</li>
-        </ul>
-      </div>
-    </div>
-  </div>
+<!-- Anchor offset fix -->
+<style>
+  html {
+    scroll-behavior: smooth;
+  }
+  h2[id]::before {
+    content: "";
+    display: block;
+    height: 120px;
+    margin-top: -120px;
+    visibility: hidden;
+  }
+  .section-nav .active {
+    background-color: #0d6efd !important;
+    color: white !important;
+  }
+  .fade-out {
+    opacity: 0 !important;
+    pointer-events: none;
+  }
+  .fade-in {
+    opacity: 1 !important;
+    pointer-events: auto;
+  }
+</style>
 
-  <!-- Chief Engineer Design & Dev -->
-  <div class="accordion-item">
-    <h2 class="accordion-header" id="headingCEDDG">
-      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCEDDG" aria-expanded="false" aria-controls="collapseCEDDG">
-        Chief Engineer Design & Dev Group, APF, PAC Kamra (Aug 2020 – May 2023)
-      </button>
-    </h2>
-    <div id="collapseCEDDG" class="accordion-collapse collapse" aria-labelledby="headingCEDDG" data-bs-parent="#resumeAccordion">
-      <div class="accordion-body">
-        <ul>
-          <li>Led AS-9100D R&D team for certified avionics development.</li>
-          <li>Delivered AAP, UFCP, DACS, MFCD, DTU.</li>
-          <li>Initiated TACAN Audio Control and MAWS projects.</li>
-        </ul>
-      </div>
-    </div>
-  </div>
+<script>
+  // Highlight active section in floating nav and auto-hide on scroll with animation
+  document.addEventListener("DOMContentLoaded", function () {
+    const navLinks = document.querySelectorAll('.nav-link-scroll');
+    const sections = [...document.querySelectorAll('h2[id]')];
+    const floatingNav = document.getElementById('floatingNav');
+    const toggleNav = document.getElementById('toggleNav');
 
-  <!-- Chief Engineer Production Support -->
-  <div class="accordion-item">
-    <h2 class="accordion-header" id="headingCEPSG">
-      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCEPSG" aria-expanded="false" aria-controls="collapseCEPSG">
-        Chief Engineer Production Support Group, APF (Aug 2019 – Aug 2020)
-      </button>
-    </h2>
-    <div id="collapseCEPSG" class="accordion-collapse collapse" aria-labelledby="headingCEPSG" data-bs-parent="#resumeAccordion">
-      <div class="accordion-body">
-        <ul>
-          <li>Managed coordination with OEMs for avionics production.</li>
-          <li>Evaluated technical proposals for MALE UAV project.</li>
-          <li>Supervised production of testers and ground support equipment.</li>
-        </ul>
-      </div>
-    </div>
-  </div>
+    let lastScrollTop = 0;
+    let ticking = false;
 
-  <!-- Director Technical Services -->
-  <div class="accordion-item">
-    <h2 class="accordion-header" id="headingDTS">
-      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDTS" aria-expanded="false" aria-controls="collapseDTS">
-        Director Technical Services, APF (Jan 2018 – Jul 2019)
-      </button>
-    </h2>
-    <div id="collapseDTS" class="accordion-collapse collapse" aria-labelledby="headingDTS" data-bs-parent="#resumeAccordion">
-      <div class="accordion-body">
-        <ul>
-          <li>Managed factory-wide operations and strategic reporting.</li>
-          <li>Handled VVIP visits and authored industrial strategy paper.</li>
-        </ul>
-      </div>
-    </div>
-  </div>
+    function onScroll() {
+      const scrollPosition = window.scrollY + 140;
+      let current = sections.find(sec => sec.offsetTop <= scrollPosition);
+      navLinks.forEach(link => link.classList.remove('active'));
+      if (current) {
+        const activeLink = document.querySelector(`.nav-link-scroll[href="#${current.id}"]`);
+        if (activeLink) activeLink.classList.add('active');
+      }
 
-  <!-- Roles 1996–2017 -->
+      const currentScrollTop = window.scrollY;
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          if (currentScrollTop > lastScrollTop && window.innerWidth >= 768) {
+            floatingNav.classList.add('fade-out');
+            floatingNav.classList.remove('fade-in');
+          } else {
+            floatingNav.classList.add('fade-in');
+            floatingNav.classList.remove('fade-out');
+          }
+          lastScrollTop = currentScrollTop <= 0 ? 0 : currentScrollTop;
+          ticking = false;
+        });
+        ticking = true;
+      }
+    }
+
+    document.addEventListener("scroll", onScroll);
+    onScroll();
+
+    // Toggle nav visibility on mobile
+    toggleNav.addEventListener("click", function () {
+      floatingNav.classList.toggle("d-none");
+    });
+
+    // Show nav by default on desktop
+    if (window.innerWidth >= 768) {
+      floatingNav.classList.remove("d-none");
+    }
+  });
+</script>
+
+<!-- ... existing content remains unchanged ... -->
+
+<h2 id="experience" class="text-center mb-5">Professional Experience</h2>
+<div class="timeline">
+
   {% for role in [
-    ["Deputy Chief Engineer Rig Dev, Avionics Production Factory (Mar 2015 – Dec 2017)", ["Led rig upgrades, developed simulators for OFP.", "Collaborated with local industry for hardware stimulator integration.", "Managed serial production of testers for FCS & engine systems."]],
-    ["Program Manager Software Dev, Avionics Production Factory (Jan 2010 – Mar 2015)", ["Upgraded avionics simulation software.", "Developed datalink radio stimulator for lab testing.", "Replaced OEM testers with cost-effective in-house solutions."]],
-    ["Member Avionics Dev, CADI, China (Dec 2008 – Jan 2010)", ["Validated user requirements and POP implementation.", "Managed configuration issues between dev teams.", "Liaised with vendors and reviewed technical documents."]],
-    ["Program Manager Software Dev, APF, PAC Kamra (Nov 2006 – Dec 2008)", ["Accepted and upgraded avionics integration rig.", "Developed avionics software simulators for mission systems."]],
-    ["Avionics Integration Tech Acquisition, CADI, China (Mar 2004 – Nov 2006)", ["Trained in avionics system design, integration, and test.", "Worked on rig development, onboard integration and V&V."]],
-    ["Instructor, School of Electronics, Korangi (Mar 2003 – Mar 2004)", ["Led training for Radio/Radar technicians.", "Delivered lectures, assessments, and reviewed curriculum."]],
-    ["Officer Incharge Automation System, Air Defence HQ (Aug 1999 – Mar 2003)", ["Maintained Hughes Automation System.", "Handled OJT, logistics, and quality assurance."]],
-    ["Officer Incharge Electronics Warfare System, PAF (May 1996 – Aug 1999)", ["Oversaw maintenance and upgrades of EW systems.", "Trained supervisors, forecasted logistics, and ensured QA."]]
+    ["Project Director, Kamra Technology Square (KTS), NASTP (Nov 2023 – Jul 2024)", ["Launched and operationalized aerospace hub at Kamra.", "Achieved 80% occupancy through strategic planning and teamwork."], "briefcase"],
+    ["Deputy Managing Director, APF, PAC Kamra (Jun 2023 – Nov 2023)", ["Led avionics design and MRO departments.", "Oversaw 18+ systems production, MRO of 20+ systems.", "Enhanced platform capability via system integration."], "building"],
+    ["Chief Engineer Design & Dev Group, APF, PAC Kamra (Aug 2020 – May 2023)", ["Led AS-9100D R&D team for certified avionics development.", "Delivered AAP, UFCP, DACS, MFCD, DTU.", "Initiated TACAN Audio Control and MAWS projects."], "wrench"],
+    ["Chief Engineer Production Support Group, APF (Aug 2019 – Aug 2020)", ["Managed coordination with OEMs for avionics production.", "Evaluated technical proposals for MALE UAV project.", "Supervised production of testers and ground support equipment."], "cogs"],
+    ["Director Technical Services, APF (Jan 2018 – Jul 2019)", ["Managed factory-wide operations and strategic reporting.", "Handled VVIP visits and authored industrial strategy paper."], "user-tie"],
+    ["Deputy Chief Engineer Rig Dev, Avionics Production Factory (Mar 2015 – Dec 2017)", ["Led rig upgrades, developed simulators for OFP.", "Collaborated with local industry for hardware stimulator integration.", "Managed serial production of testers for FCS & engine systems."], "microchip"],
+    ["Program Manager Software Dev, Avionics Production Factory (Jan 2010 – Mar 2015)", ["Upgraded avionics simulation software.", "Developed datalink radio stimulator for lab testing.", "Replaced OEM testers with cost-effective in-house solutions."], "code"],
+    ["Member Avionics Dev, CADI, China (Dec 2008 – Jan 2010)", ["Validated user requirements and POP implementation.", "Managed configuration issues between dev teams.", "Liaised with vendors and reviewed technical documents."], "globe"],
+    ["Program Manager Software Dev, APF, PAC Kamra (Nov 2006 – Dec 2008)", ["Accepted and upgraded avionics integration rig.", "Developed avionics software simulators for mission systems."], "laptop-code"],
+    ["Avionics Integration Tech Acquisition, CADI, China (Mar 2004 – Nov 2006)", ["Trained in avionics system design, integration, and test.", "Worked on rig development, onboard integration and V&V."], "school"],
+    ["Instructor, School of Electronics, Korangi (Mar 2003 – Mar 2004)", ["Led training for Radio/Radar technicians.", "Delivered lectures, assessments, and reviewed curriculum."], "chalkboard-teacher"],
+    ["Officer Incharge Automation System, Air Defence HQ (Aug 1999 – Mar 2003)", ["Maintained Hughes Automation System.", "Handled OJT, logistics, and quality assurance."], "satellite"],
+    ["Officer Incharge Electronics Warfare System, PAF (May 1996 – Aug 1999)", ["Oversaw maintenance and upgrades of EW systems.", "Trained supervisors, forecasted logistics, and ensured QA."], "shield-alt"]
   ] %}
-  <div class="accordion-item">
-    <h2 class="accordion-header" id="heading{{ loop.index }}">
-      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ loop.index }}" aria-expanded="false" aria-controls="collapse{{ loop.index }}">
-        {{ role[0] }}
-      </button>
-    </h2>
-    <div id="collapse{{ loop.index }}" class="accordion-collapse collapse" aria-labelledby="heading{{ loop.index }}" data-bs-parent="#resumeAccordion">
-      <div class="accordion-body">
-        <ul>
-          {% for bullet in role[1] %}
-          <li>{{ bullet }}</li>
-          {% endfor %}
-        </ul>
-      </div>
+  <div class="timeline-item">
+    <div class="timeline-marker"><i class="fas fa-{{ role[2] }} text-white"></i></div>
+    <div class="timeline-content">
+      <h5>{{ role[0] }}</h5>
+      <ul>
+        {% for bullet in role[1] %}
+        <li>{{ bullet }}</li>
+        {% endfor %}
+      </ul>
     </div>
   </div>
   {% endfor %}
-
 </div>
 
-<h2 class="mt-4">Education</h2>
+<h2 id="education" class="mt-5">Education</h2>
 <ul>
   <li>MS Computer Engineering, UET Taxila (CGPA 3.75/4.00)</li>
   <li>MS War Studies, NDU, Islamabad</li>
   <li>BE Avionics, College of Aeronautical Engineering, NUST (CGPA 3.08/4.00)</li>
 </ul>
 
-<h2 class="mt-4">Skills & Certifications</h2>
+<h2 id="skills" class="mt-4">Skills & Certifications</h2>
 <ul>
   <li>Avionics System Design & Development</li>
   <li>Systems Integration & Testing</li>
   <li>AS-9100D / DO-178B Understanding</li>
   <li>C/C++ / Java / Python</li>
 </ul>
-<h2 class="mt-4">Professional Awards</h2>
+
+<h2 id="awards" class="mt-4">Professional Awards</h2>
 <ul>
   <li>Chief of Air Staff Commendation Certificate (Mar, 2013)</li>
   <li>Chief of Air Staff Commendation Certificate (Aug, 2014)</li>
@@ -144,16 +153,60 @@
   <li>Tamgha-e-Imtiaz Military (Mar, 2018)</li>
 </ul>
 
-<h2 class="mt-4">Extra Curricular Activities</h2>
+<h2 id="activities" class="mt-4">Extra Curricular Activities</h2>
 <ul>
   <li>President Mess Committee Officers Club, Pakistan Aeronautical Complex (Mar, 2021 – Aug, 2023)</li>
 </ul>
 
-<h2 class="mt-4">Sports</h2>
+<h2 id="sports" class="mt-4">Sports</h2>
 <ul>
   <li>Tennis Team Captain, Pakistan Aeronautical Complex, Kamra (Aug, 2020 – Sep, 2023)</li>
   <li>Member of Squash Team, PAF Base Sargodha (May, 1997 – Aug, 1999)</li>
   <li>Table Tennis Team Captain, St Judes High School (Sep, 1983 – Nov, 1985)</li>
 </ul>
+
+<!-- Font Awesome for timeline icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+<style>
+  .timeline {
+    position: relative;
+    padding: 2rem 0;
+    margin-left: 1rem;
+    border-left: 4px solid #0d6efd;
+  }
+  .timeline-item {
+    position: relative;
+    margin-bottom: 2rem;
+    animation: fadeInUp 0.6s ease-in-out both;
+  }
+  .timeline-marker {
+    position: absolute;
+    left: -1.15rem;
+    top: 0;
+    width: 2rem;
+    height: 2rem;
+    background-color: #0d6efd;
+    border-radius: 50%;
+    border: 2px solid white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+  }
+  .timeline-content {
+    margin-left: 2rem;
+  }
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>
 
 {% endblock %}
