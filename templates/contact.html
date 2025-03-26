@@ -2,18 +2,29 @@
 {% block content %}
 <h2>Contact Me</h2>
 <p>If you'd like to connect, feel free to drop me a message!</p>
-<form action="mailto:shariqmasood@gmail.com" method="post" enctype="text/plain">
+
+{% if msg_sent %}
+<div class="alert alert-success" role="alert">
+  ✅ Your message was sent successfully!
+</div>
+{% endif %}
+
+<form action="{{ url_for('contact') }}" method="post">
   <div class="mb-3">
     <label for="name" class="form-label">Name</label>
-    <input type="text" class="form-control" id="name" placeholder="Your Name">
+    <input type="text" name="name" class="form-control" id="name" placeholder="Your Name" required>
   </div>
   <div class="mb-3">
     <label for="email" class="form-label">Email</label>
-    <input type="email" class="form-control" id="email" placeholder="Your Email">
+    <input type="email" name="email" class="form-control" id="email" placeholder="Your Email" required>
+  </div>
+  <div class="mb-3">
+    <label for="phone" class="form-label">Phone</label>
+    <input type="text" name="phone" class="form-control" id="phone" placeholder="Your Phone">
   </div>
   <div class="mb-3">
     <label for="message" class="form-label">Message</label>
-    <textarea class="form-control" id="message" rows="4" placeholder="Your Message"></textarea>
+    <textarea name="message" class="form-control" id="message" rows="4" placeholder="Your Message" required></textarea>
   </div>
   <button type="submit" class="btn btn-primary">Send</button>
 </form>

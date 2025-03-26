@@ -7,3 +7,10 @@ h1, h2, h3 {
 }
 
 /* Customize navbar, footer, or any sections as needed */
+.section-nav .btn {
+  width: 160px;
+  padding: 6px 12px;
+  font-size: 0.9rem;
+  text-align: left;
+  white-space: nowrap;
+}
