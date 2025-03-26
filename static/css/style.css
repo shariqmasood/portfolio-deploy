@@ -14,3 +14,28 @@ h1, h2, h3 {
   text-align: left;
   white-space: nowrap;
 }
+/* Dark mode support */
+body.dark-mode {
+  background-color: #121212;
+  color: #f5f5f5;
+}
+
+.navbar.dark-mode,
+.section-nav.dark-mode,
+footer.dark-mode {
+  background-color: #1f1f1f !important;
+  color: #f5f5f5 !important;
+}
+
+body.dark-mode a,
+.navbar.dark-mode a,
+footer.dark-mode a {
+  color: #bbbbff !important;
+}
+
+body.dark-mode .btn {
+  background-color: #333 !important;
+  color: #fff !important;
+  border-color: #555 !important;
+}
+
