@@ -3,6 +3,7 @@ import smtplib
 from flask import Flask, render_template, request
 from dotenv import load_dotenv
 from email.mime.text import MIMEText
+from datetime import datetime
 
 
 load_dotenv()
@@ -28,7 +29,9 @@ def about():
 def resume():
     return render_template("resume.html")
 
-
+@app.context_processor
+def inject_current_year():
+    return {'current_year': datetime.now().year}
 
 
 @app.route("/contact", methods=["GET", "POST"])
