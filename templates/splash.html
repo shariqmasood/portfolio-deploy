@@ -1,0 +1,42 @@
+<!-- splash.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="refresh" content="3;url={{ url_for('home') }}">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Welcome | Shariq Masood</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <style>
+    body {
+      margin: 0;
+      background-color: #0f172a;
+      color: #fff;
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      flex-direction: column;
+    }
+    .splash-logo {
+      max-width: 250px;
+      margin-bottom: 30px;
+      animation: zoomIn 1.5s ease;
+    }
+    .loading-text {
+      font-size: 1.2rem;
+      letter-spacing: 2px;
+      opacity: 0.8;
+    }
+    @keyframes zoomIn {
+      from { transform: scale(0.8); opacity: 0; }
+      to   { transform: scale(1); opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+  <img src="{{ url_for('static', filename='logo.png') }}" alt="Shariq Masood Logo" class="splash-logo">
+  <div class="loading-text">Redirecting to portfolio...</div>
+</body>
+</html>

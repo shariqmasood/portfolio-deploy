@@ -13,6 +13,10 @@ MAIL_ADDRESS = os.getenv("EMAIL_KEY")
 MAIL_APP_PW = os.getenv("PASSWORD_KEY")
 
 @app.route("/")
+def splash():
+    return render_template("splash.html")
+
+@app.route("/index")
 def home():
     return render_template("index.html")
 
@@ -23,6 +27,9 @@ def about():
 @app.route("/resume")
 def resume():
     return render_template("resume.html")
+
+
+
 
 @app.route("/contact", methods=["GET", "POST"])
 def contact():
