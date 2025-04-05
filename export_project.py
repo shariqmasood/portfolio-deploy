@@ -1,25 +1,37 @@
 import os
 
-# Define file extensions you want to include
-valid_extensions = ['.py', '.html', '.css', '.js', '.txt', '.md', '', '.json']
-
-# Define the output file
 output_file = "project_summary.txt"
 
-# Walk through all directories and files
-with open(output_file, "w", encoding='utf-8') as out:
-    for root, dirs, files in os.walk("."):
-        for file in files:
-            ext = os.path.splitext(file)[1]
-            if ext in valid_extensions and ".venv" not in root and "__pycache__" not in root and ".idea" not in root:
-                full_path = os.path.join(root, file)
-                try:
-                    with open(full_path, "r", encoding='utf-8') as f:
-                        rel_path = os.path.relpath(full_path, ".")
-                        out.write(f"\n\n### FILE: {rel_path} ###\n")
-                        out.write(f.read())
-                        out.write("\n\n" + "#" * 60 + "\n")
-                except Exception as e:
-                    print(f"Error reading {full_path}: {e}")
+# Directories and extensions to skip
+exclude_dirs = {'.git', '.venv', '__pycache__', '.idea', 'node_modules', 'dist', 'build'}
+exclude_exts = {
+    '.png', '.jpg', '.jpeg', '.gif', '.ico', '.exe', '.dll', '.pyd', '.pyc',
+    '.so', '.zip', '.tar', '.gz', '.pdf', '.db', '.woff', '.woff2', '.ttf'
+}
 
-print(f"\n✅ Project exported to: {output_file}")
+def should_skip(path):
+    return any(part in exclude_dirs for part in path.split(os.sep)) or \
+           os.path.splitext(path)[1].lower() in exclude_exts
+
+def read_file_safe(file_path):
+    try:
+        with open(file_path, "r", encoding="utf-8") as f:
+            return f.read()
+    except Exception as e:
+        return f"Error reading {file_path}: {e}\n"
+
+summary = []
+
+for root, dirs, files in os.walk(".", topdown=True):
+    dirs[:] = [d for d in dirs if d not in exclude_dirs]
+    for file in files:
+        rel_path = os.path.relpath(os.path.join(root, file), start=".")
+        if should_skip(rel_path):
+            continue
+        content = read_file_safe(os.path.join(root, file))
+        summary.append(f"\n\n# === {rel_path} ===\n\n{content}")
+
+with open(output_file, "w", encoding="utf-8") as f:
+    f.writelines(summary)
+
+print("✅ Clean summary created as 'project_summary.txt' without .git and binary errors.")
