@@ -1,6 +1,6 @@
 import os
 import smtplib
-from flask import Flask, session, redirect, url_for, render_template, request
+from flask import Flask, redirect, url_for, render_template, request, make_response
 from dotenv import load_dotenv
 from email.mime.text import MIMEText
 from datetime import datetime
@@ -9,23 +9,23 @@ from datetime import datetime
 load_dotenv()
 
 app = Flask(__name__)
-app.secret_key = os.getenv("FLASK_KEY")  # Change this to something secure
+#app.secret_key = os.getenv("FLASK_KEY")  # Change this to something secure
 
 MAIL_ADDRESS = os.getenv("EMAIL_KEY")
 MAIL_APP_PW = os.getenv("PASSWORD_KEY")
 
 @app.route("/")
 def splash():
-    if not app.secret_key:
-        return "Missing secret key!", 500
-    if session.get("has_visited"):
+    has_visited = request.cookies.get("has_visited")
+    if has_visited:
         return redirect(url_for("home"))
-    session["has_visited"] = True
-    return render_template("splash.html")
+
+    resp = make_response(render_template("splash.html"))
+    resp.set_cookie("has_visited", "true", max_age=60 * 60 * 24 * 30)  # 30 days
+    return resp
 
 @app.route("/index")
 def home():
-    session["has_visited"] = True  # Ensure flag is always set if user comes here directly
     return render_template("index.html")
 
 
