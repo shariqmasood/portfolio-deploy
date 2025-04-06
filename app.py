@@ -16,6 +16,8 @@ MAIL_APP_PW = os.getenv("PASSWORD_KEY")
 
 @app.route("/")
 def splash():
+    if not app.secret_key:
+        return "Missing secret key!", 500
     if session.get("has_visited"):
         return redirect(url_for("home"))
     session["has_visited"] = True

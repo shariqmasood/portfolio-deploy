@@ -21,6 +21,200 @@ instance/
 
 import os
 import smtplib
+from flask import Flask, session, redirect, url_for, render_template, request
+from dotenv import load_dotenv
+from email.mime.text import MIMEText
+from datetime import datetime
+
+
+load_dotenv()
+
+app = Flask(__name__)
+app.secret_key = os.getenv("FLASK_KEY")  # Change this to something secure
+
+MAIL_ADDRESS = os.getenv("EMAIL_KEY")
+MAIL_APP_PW = os.getenv("PASSWORD_KEY")
+
+@app.route("/")
+def splash():
+    if session.get("has_visited"):
+        return redirect(url_for("home"))
+    session["has_visited"] = True
+    return render_template("splash.html")
+
+@app.route("/index")
+def home():
+    session["has_visited"] = True  # Ensure flag is always set if user comes here directly
+    return render_template("index.html")
+
+
+@app.route("/about")
+def about():
+    return render_template("about.html")
+
+@app.route("/resume")
+def resume():
+    return render_template("resume.html")
+
+@app.context_processor
+def inject_current_year():
+    return {'current_year': datetime.now().year}
+
+
+@app.route("/contact", methods=["GET", "POST"])
+def contact():
+    if request.method == "POST":
+        data = request.form
+        send_email(data["name"], data["email"], data["phone"], data["message"])
+        return render_template("contact.html", msg_sent=True)
+    return render_template("contact.html", msg_sent=False)
+
+def send_email(name, sender_email, phone, message):
+    # Email to yourself
+    # Email to yourself
+    email_message = f"""New Message from Portfolio
+
+    Name: {name}
+    Email: {sender_email}
+    Phone: {phone}
+    Message: {message}
+    """
+    msg_to_self = MIMEText(email_message, _charset="utf-8")
+    msg_to_self['Subject'] = "New Message from Portfolio"
+    msg_to_self['From'] = sender_email
+    msg_to_self['To'] = MAIL_ADDRESS
+
+    with smtplib.SMTP("smtp.gmail.com", 587) as connection:
+        connection.starttls()
+        connection.login(MAIL_ADDRESS, MAIL_APP_PW)
+        connection.sendmail(sender_email, MAIL_ADDRESS, msg_to_self.as_string())
+
+    # Auto-reply to sender
+    auto_reply = f"""Dear {name},
+
+    Thank you for reaching out. I’ve received your message and will get back to you shortly.
+
+    Best regards,
+    Shariq Masood
+    """
+    msg_to_user = MIMEText(auto_reply, _charset="utf-8")
+    msg_to_user['Subject'] = "Thanks for contacting me!"
+    msg_to_user['From'] = MAIL_ADDRESS
+    msg_to_user['To'] = sender_email
+
+    with smtplib.SMTP("smtp.gmail.com", 587) as connection:
+        connection.starttls()
+        connection.login(MAIL_ADDRESS, MAIL_APP_PW)
+        connection.sendmail(MAIL_ADDRESS, sender_email, msg_to_user.as_string())
+
+    # Log submission
+    with open("contact_logs.txt", "a") as log:
+        log.write(f"\n-----\nName: {name}\nEmail: {sender_email}\nPhone: {phone}\nMessage: {message}\n")
+
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 5000))
+    app.run(debug=False, host='0.0.0.0', port=port)
+
+
+# === contact_logs.txt ===
+
+
+-----
+Name: Shariq Masood
+Email: shariqmasood@gmail.com
+Phone: 03345495507
+Message: hhh
+
+-----
+Name: Shariq Masood
+Email: shariqmasood@gmail.com
+Phone: 03345495507
+Message: hhh
+
+-----
+Name: Ahmad
+Email: ysashariq@gmail.com
+Phone: 03345495507
+Message: hello
+
+-----
+Name: shariq masood
+Email: shariq_150@yahoo.com
+Phone: 03345495507
+Message: test
+
+
+# === export_project.py ===
+
+import os
+
+output_file = "project_summary.txt"
+
+# Directories and extensions to skip
+exclude_dirs = {'.git', '.venv', '__pycache__', '.idea', 'node_modules', 'dist', 'build'}
+exclude_exts = {
+    '.png', '.jpg', '.jpeg', '.gif', '.ico', '.exe', '.dll', '.pyd', '.pyc',
+    '.so', '.zip', '.tar', '.gz', '.pdf', '.db', '.woff', '.woff2', '.ttf'
+}
+
+def should_skip(path):
+    return any(part in exclude_dirs for part in path.split(os.sep)) or \
+           os.path.splitext(path)[1].lower() in exclude_exts
+
+def read_file_safe(file_path):
+    try:
+        with open(file_path, "r", encoding="utf-8") as f:
+            return f.read()
+    except Exception as e:
+        return f"Error reading {file_path}: {e}\n"
+
+summary = []
+
+for root, dirs, files in os.walk(".", topdown=True):
+    dirs[:] = [d for d in dirs if d not in exclude_dirs]
+    for file in files:
+        rel_path = os.path.relpath(os.path.join(root, file), start=".")
+        if should_skip(rel_path):
+            continue
+        content = read_file_safe(os.path.join(root, file))
+        summary.append(f"\n\n# === {rel_path} ===\n\n{content}")
+
+with open(output_file, "w", encoding="utf-8") as f:
+    f.writelines(summary)
+
+print("✅ Clean summary created as 'project_summary.txt' without .git and binary errors.")
+
+
+# === Procfile ===
+
+web: gunicorn app:app
+
+
+# === project_summary.txt ===
+
+
+
+# === .env ===
+
+EMAIL_KEY="shariqmasood@gmail.com"
+PASSWORD_KEY="ukhzzhhmwrrsrofc"
+FLASK_KEY="8BYkEfBA6O6donzWlSihBXox7C0sKR6b"
+
+# === .gitignore ===
+
+__pycache__/
+*.pyc
+.env
+.venv/
+instance/
+.env.*
+*.sqlite3
+
+
+# === app.py ===
+
+import os
+import smtplib
 from flask import Flask, render_template, request
 from dotenv import load_dotenv
 from email.mime.text import MIMEText
@@ -2915,5 +3109,476 @@ body.dark-mode .btn {
 <body>
   <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Shariq Masood Logo" class="splash-logo">
   <div class="loading-text">Redirecting to portfolio...</div>
+</body>
+</html>
+
+
+# === requirements.txt ===
+
+Flask>=2.2.2
+Werkzeug>=2.2.2
+gunicorn==20.1.0
+python-dotenv>=1.0.0
+
+
+# === static\css\style.css ===
+
+body {
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+}
+
+h1, h2, h3 {
+  color: #333;
+}
+
+/* Customize navbar, footer, or any sections as needed */
+.section-nav .btn {
+  width: 160px;
+  padding: 6px 12px;
+  font-size: 0.9rem;
+  text-align: left;
+  white-space: nowrap;
+}
+/* Dark mode support */
+body.dark-mode {
+  background-color: #121212;
+  color: #f5f5f5;
+}
+
+.navbar.dark-mode,
+.section-nav.dark-mode,
+footer.dark-mode {
+  background-color: #1f1f1f !important;
+  color: #f5f5f5 !important;
+}
+
+body.dark-mode a,
+.navbar.dark-mode a,
+footer.dark-mode a {
+  color: #bbbbff !important;
+}
+
+body.dark-mode .btn {
+  background-color: #333 !important;
+  color: #fff !important;
+  border-color: #555 !important;
+}
+
+
+
+# === templates\about.html ===
+
+{% extends "base.html" %}
+{% block content %}
+<h2>About Me</h2>
+<p style="text-align: justify;">
+    With a distinguished career spanning over 25 years in the aerospace and defense industry, I bring a wealth of expertise in avionics systems design, integration, software development, and project leadership. My professional journey includes pivotal roles such as Project Director, Chief Engineer, and Program Manager, where I’ve consistently driven innovation and ensured mission-critical success under demanding conditions.
+</p>
+<p style="text-align: justify;">
+    Over the years, I have led and contributed to the development of complex software solutions—ranging from avionics integration simulators to mission system software and flight-critical test platforms. My hands-on experience in embedded systems, software lifecycle management, and collaboration with cross-functional development teams has been instrumental in transforming user requirements into reliable, efficient, and scalable solutions.
+</p>
+<p style="text-align: justify;">
+    I am deeply committed to engineering excellence and thrive in dynamic environments that challenge both technical rigor and strategic thinking. My work reflects a strong dedication to quality, continuous improvement, and the development of world-class aviation and software capabilities. Whether leading multidisciplinary teams or collaborating with global stakeholders, I approach every project with integrity, precision, and a passion for delivering impactful solutions.
+</p>
+<div style="margin-bottom: 200px;"></div>
+<!-- You can add more sections or images as needed -->
+{% endblock %}
+
+
+# === templates\base.html ===
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ title if title else "Portfolio" }}</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <style>
+    @keyframes fadeInZoom {
+      0% { opacity: 0; transform: scale(0.8); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+    .animated-logo {
+      animation: fadeInZoom 1s ease-in-out forwards;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top shadow-sm">
+    <div class="container">
+      <a class="navbar-brand fw-bold" href="/">My Portfolio</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+         aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+         <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+         <ul class="navbar-nav ms-auto">
+            <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+            <li class="nav-item"><a class="nav-link" href="/about">About</a></li>
+            <li class="nav-item"><a class="nav-link" href="/resume">Resume</a></li>
+            <li class="nav-item"><a class="nav-link" href="/contact">Contact</a></li>
+         </ul>
+      </div>
+    </div>
+  </nav>
+
+  <button class="btn btn-secondary position-fixed top-0 end-0 m-3 z-3" onclick="toggleDark()">🌙</button>
+
+  <script>
+    function toggleDark() {
+      document.body.classList.toggle("dark-mode");
+      document.querySelector('nav').classList.toggle("dark-mode");
+      document.querySelector('footer').classList.toggle("dark-mode");
+    }
+  </script>
+
+  <!-- Main Content -->
+  <div class="container py-4 px-3">
+    {% block content %}
+    {% endblock %}
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-light py-4 mt-5 border-top">
+    <div class="container text-center">
+      <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Shariq Masood Logo" style="height: 60px;" class="mb-2 animated-logo">
+      <p class="mb-1">&copy; {{ year or "2025" }} Shariq Masood. All rights reserved.</p>
+      <p class="mb-0 small">
+        <a href="mailto:shariqmasood@gmail.com">shariqmasood@gmail.com</a> |
+        <a href="https://linkedin.com/in/shariq-masood-8b70a4293" target="_blank">LinkedIn</a>
+      </p>
+      <a href="{{ url_for('static', filename='docs/Shariq_Masood_Resume.pdf') }}" class="btn btn-outline-primary mt-3" download>
+        📄 Download My Resume
+      </a>
+    </div>
+  </footer>
+
+  <!-- Bootstrap JS Bundle -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+
+
+# === templates\contact.html ===
+
+{% extends "base.html" %}
+{% block content %}
+<h2>Contact Me</h2>
+<p>If you'd like to connect, feel free to drop me a message!</p>
+
+{% if msg_sent %}
+<div class="alert alert-success" role="alert">
+  ✅ Your message was sent successfully!
+</div>
+{% endif %}
+
+<form action="{{ url_for('contact') }}" method="post">
+  <div class="mb-3">
+    <label for="name" class="form-label">Name</label>
+    <input type="text" name="name" class="form-control" id="name" placeholder="Your Name" required>
+  </div>
+  <div class="mb-3">
+    <label for="email" class="form-label">Email</label>
+    <input type="email" name="email" class="form-control" id="email" placeholder="Your Email" required>
+  </div>
+  <div class="mb-3">
+    <label for="phone" class="form-label">Phone</label>
+    <input type="text" name="phone" class="form-control" id="phone" placeholder="Your Phone">
+  </div>
+  <div class="mb-3">
+    <label for="message" class="form-label">Message</label>
+    <textarea name="message" class="form-control" id="message" rows="4" placeholder="Your Message" required></textarea>
+  </div>
+  <button type="submit" class="btn btn-primary">Send</button>
+</form>
+{% endblock %}
+
+
+# === templates\index.html ===
+
+{% extends "base.html" %}
+{% block content %}
+<div class="row align-items-center">
+  <div class="col-md-6">
+    <h1 class="display-4">Hi, I'm Shariq </h1>
+    <p class="lead">A seasoned avionics professional and software developer with over 25 years of experience in the aerospace industry.</p>
+    <a href="/resume" class="btn btn-primary btn-lg">View My Resume</a>
+  </div>
+  <div class="col-md-6 text-center">
+    <img src="{{ url_for('static', filename='img/profile.jpg') }}" alt="Profile Picture" class="img-fluid rounded-circle" style="max-width: 300px;">
+  </div>
+</div>
+{% endblock %}
+
+
+# === templates\resume.html ===
+
+{% extends "base.html" %}
+{% block content %}
+
+<!-- FAB Toggle for Mobile Nav -->
+<button class="btn btn-primary position-fixed bottom-0 start-0 m-3 d-md-none z-3" id="toggleNav">
+  <i class="fas fa-bars"></i>
+</button>
+
+<!-- Section Navigation (Floating Vertical Menu Right) -->
+<div class="section-nav position-fixed top-50 end-0 translate-middle-y z-3 opacity-100 transition-opacity d-none d-md-block" id="floatingNav" style="transition: opacity 0.5s ease-in-out;">
+  <div class="d-flex flex-column align-items-end">
+    <a href="#experience" class="btn btn-outline-primary m-1 nav-link-scroll section-btn text-start w-100"><i class="fas fa-briefcase me-2"></i>Experience</a>
+    <a href="#education" class="btn btn-outline-primary m-1 nav-link-scroll section-btn text-start w-100"><i class="fas fa-graduation-cap me-2"></i>Education</a>
+    <a href="#skills" class="btn btn-outline-primary m-1 nav-link-scroll section-btn text-start w-100"><i class="fas fa-tools me-2"></i>Skills</a>
+    <a href="#awards" class="btn btn-outline-primary m-1 nav-link-scroll section-btn text-start w-100"><i class="fas fa-trophy me-2"></i>Awards</a>
+    <a href="#activities" class="btn btn-outline-primary m-1 nav-link-scroll section-btn text-start w-100"><i class="fas fa-users me-2"></i>Activities</a>
+    <a href="#sports" class="btn btn-outline-primary m-1 nav-link-scroll section-btn text-start w-100"><i class="fas fa-table-tennis me-2"></i>Sports</a>
+  </div>
+</div>
+
+<!-- Anchor offset fix -->
+<style>
+  html {
+    scroll-behavior: smooth;
+  }
+  h2[id]::before {
+    content: "";
+    display: block;
+    height: 120px;
+    margin-top: -120px;
+    visibility: hidden;
+  }
+  .section-nav .active {
+    background-color: #0d6efd !important;
+    color: white !important;
+  }
+  .fade-out {
+    opacity: 0 !important;
+    pointer-events: none;
+  }
+  .fade-in {
+    opacity: 1 !important;
+    pointer-events: auto;
+  }
+  .section-nav .btn {
+    width: 180px;
+    padding: 6px 12px;
+    font-size: 0.9rem;
+    text-align: left;
+    white-space: nowrap;
+  }
+</style>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const navLinks = document.querySelectorAll('.nav-link-scroll');
+    const sections = [...document.querySelectorAll('h2[id]')];
+    const floatingNav = document.getElementById('floatingNav');
+    const toggleNav = document.getElementById('toggleNav');
+
+    let lastScrollTop = 0;
+    let ticking = false;
+
+    function onScroll() {
+      const scrollPosition = window.scrollY + 140;
+      let current = sections.find(sec => sec.offsetTop <= scrollPosition);
+      navLinks.forEach(link => link.classList.remove('active'));
+      if (current) {
+        const activeLink = document.querySelector(`.nav-link-scroll[href="#${current.id}"]`);
+        if (activeLink) activeLink.classList.add('active');
+      }
+
+      const currentScrollTop = window.scrollY;
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          if (currentScrollTop > lastScrollTop && window.innerWidth >= 768) {
+            floatingNav.classList.add('fade-out');
+            floatingNav.classList.remove('fade-in');
+          } else {
+            floatingNav.classList.add('fade-in');
+            floatingNav.classList.remove('fade-out');
+          }
+          lastScrollTop = currentScrollTop <= 0 ? 0 : currentScrollTop;
+          ticking = false;
+        });
+        ticking = true;
+      }
+    }
+
+    document.addEventListener("scroll", onScroll);
+    onScroll();
+
+    // Toggle nav visibility on mobile
+    toggleNav.addEventListener("click", function () {
+      floatingNav.classList.toggle("d-none");
+    });
+  });
+</script>
+
+
+<!-- ... existing content remains unchanged ... -->
+
+<!-- <h2 id="experience" class="text-center mb-5">Professional Experience</h2> -->
+<h2 id="experience" class="mt-5">Professional Experience</h2>
+
+<div class="timeline">
+
+  {% for role in [
+    ["Project Director, Kamra Technology Square (KTS), NASTP (Nov 2023 – Jul 2024)", ["Launched and operationalized technology park at Kamra.", "Achieved 80% occupancy through strategic planning and teamwork."], "building"],
+    ["Deputy Managing Director, APF, PAC Kamra (Jun 2023 – Nov 2023)", ["Led avionics integration, design & dev, production and MRO departments.", "Oversaw 18+ systems production, MRO of 20+ systems.", "Enhanced platform capability via system integration."], "briefcase"],
+    ["Chief Engineer Design & Dev Group, APF, PAC Kamra (Aug 2020 – May 2023)", ["Led AS-9100D R&D team for certified avionics development.", "Delivered AAP, UFCP, DACS, MFCD, DTU.", "Initiated TACAN Audio Control and MAWS projects."], "wrench"],
+    ["Chief Engineer Production Support Group, APF (Aug 2019 – Aug 2020)", ["Managed coordination with OEMs for avionics production.", "Evaluated technical proposals for MALE UAV project.", "Supervised production of testers and ground support equipment."], "cogs"],
+    ["Director Technical Services, APF (Jan 2018 – Jul 2019)", ["Managed factory-wide operations and strategic reporting.", "Conducted VVIP visits and authored industrial strategy paper."], "user-tie"],
+    ["Deputy Chief Engineer Rig Dev, Avionics Production Factory (Mar 2015 – Dec 2017)", ["Led rig upgrades, developed simulators for OFP.", "Collaborated with local industry for hardware stimulator integration.", "Managed serial production of testers for FCS & engine systems."], "microchip"],
+    ["Program Manager Software Dev, Avionics Production Factory (Jan 2010 – Mar 2015)", ["Upgraded avionics simulation software.", "Developed datalink radio stimulator for lab testing.", "Replaced OEM testers with cost-effective in-house solutions."], "code"],
+    ["Member Avionics Dev, CADI, China (Dec 2008 – Jan 2010)", ["Validated user requirements and POP implementation.", "Managed configuration issues between dev teams.", "Liaised with vendors and reviewed technical documents."], "globe"],
+    ["Program Manager Software Dev, APF, PAC Kamra (Nov 2006 – Dec 2008)", ["Accepted and upgraded avionics integration rig.", "Developed avionics software simulators for mission systems."], "laptop-code"],
+    ["Avionics Integration Tech Acquisition, CADI, China (Mar 2004 – Nov 2006)", ["Trained in avionics system design, integration, and test.", "Worked on rig development, onboard integration and V&V."], "school"],
+    ["Instructor, School of Electronics, Korangi (Mar 2003 – Mar 2004)", ["Led training for Radio/Radar technicians.", "Delivered lectures, assessments, and reviewed curriculum."], "chalkboard-teacher"],
+    ["Officer Commanding Engg Wing, PAF Base, Jacobabad (Sep 2002 – Feb 2003)", ["Responsible for base-wide engineering activities including", "CNS/Air Nav Aids, Communication, QA,and logistics."], "cogs"],
+    ["Officer Incharge Automation System, Air Defence HQ (Aug 1999 – Aug 2002)", ["Maintained Hughes Automation System.", "Handled OJT, logistics, and quality assurance."], "satellite"],
+    ["Officer Incharge Electronics Warfare System, PAF (May 1996 – Aug 1999)", ["Oversaw maintenance and upgrades of EW systems.", "Trained supervisors, forecasted logistics, and ensured QA."], "shield-alt"]
+  ] %}
+  <div class="timeline-item">
+    <div class="timeline-marker"><i class="fas fa-{{ role[2] }} text-white"></i></div>
+    <div class="timeline-content">
+      <h5>{{ role[0] }}</h5>
+      <ul>
+        {% for bullet in role[1] %}
+        <li>{{ bullet }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+<h2 id="education" class="mt-5">Education</h2>
+<ul>
+  <li>MS Computer Engineering, UET Taxila (CGPA 3.75/4.00)</li>
+  <li>MS War Studies, NDU, Islamabad</li>
+  <li>BE Avionics, College of Aeronautical Engineering, NUST (CGPA 3.08/4.00)</li>
+</ul>
+
+<h2 id="skills" class="mt-4">Skills & Certifications</h2>
+<ul>
+  <li>Avionics System Design & Development</li>
+  <li>Systems Integration & Testing</li>
+  <li>AS-9100D / DO-178B Understanding</li>
+  <li>C/C++ / Java / Python</li>
+</ul>
+
+<h2 id="awards" class="mt-4">Professional Awards</h2>
+<ul>
+  <li>Chief of Air Staff Commendation Certificate (Mar, 2013)</li>
+  <li>Chief of Air Staff Commendation Certificate (Aug, 2014)</li>
+  <li>Professional Excellence Badge (Mar, 2016)</li>
+  <li>Tamgha-e-Imtiaz Military (Mar, 2018)</li>
+</ul>
+
+<h2 id="activities" class="mt-4">Extra Curricular Activities</h2>
+<ul>
+  <li>President Mess Committee Officers Club, Pakistan Aeronautical Complex (Mar, 2021 – Aug, 2023)</li>
+</ul>
+
+<h2 id="sports" class="mt-4">Sports</h2>
+<ul>
+  <li>Tennis Team Captain, Pakistan Aeronautical Complex, Kamra (Aug, 2020 – Sep, 2023)</li>
+  <li>Member of Squash Team, PAF Base Sargodha (May, 1997 – Aug, 1999)</li>
+  <li>Table Tennis Team Captain, St Judes High School (Sep, 1983 – Nov, 1985)</li>
+</ul>
+
+<!-- Font Awesome for timeline icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+<style>
+  .timeline {
+    position: relative;
+    padding: 2rem 0;
+    margin-left: 1rem;
+    border-left: 4px solid #0d6efd;
+  }
+  .timeline-item {
+    position: relative;
+    margin-bottom: 2rem;
+    animation: fadeInUp 0.6s ease-in-out both;
+  }
+  .timeline-marker {
+    position: absolute;
+    left: -1.15rem;
+    top: 0;
+    width: 2rem;
+    height: 2rem;
+    background-color: #0d6efd;
+    border-radius: 50%;
+    border: 2px solid white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+  }
+  .timeline-content {
+    margin-left: 2rem;
+  }
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>
+
+{% endblock %}
+
+
+# === templates\splash.html ===
+
+<!-- splash.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="refresh" content="3;url={{ url_for('home') }}">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Welcome | Shariq Masood</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <style>
+    body {
+      margin: 0;
+      background-color: #0f172a;
+      color: #fff;
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      flex-direction: column;
+    }
+    .splash-logo {
+      max-width: 250px;
+      margin-bottom: 30px;
+      animation: zoomIn 1.5s ease;
+    }
+    .loading-text {
+      font-size: 1.2rem;
+      letter-spacing: 2px;
+      opacity: 0.8;
+    }
+    @keyframes zoomIn {
+      from { transform: scale(0.8); opacity: 0; }
+      to   { transform: scale(1); opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+  <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Shariq Masood Logo" class="splash-logo">
+  <div class="loading-text">Redirecting to my portfolio...</div>
 </body>
 </html>
